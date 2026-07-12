@@ -29,6 +29,8 @@ if churn_col:
     with col1:
      contagem_churn = df[churn_col].value_counts().reset_index()
      contagem_churn.columns = ["Status", "Quantidade"]
+
+        import plotly.express as px     
      fig_pizza = px.pie(
             contagem_churn,
             names="Status",
