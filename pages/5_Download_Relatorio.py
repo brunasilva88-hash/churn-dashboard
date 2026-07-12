@@ -16,7 +16,9 @@ from email import encoders
 
 @st.cache_data
 def carregar_dados():
-    df = pd.read_csv("data/telco_churn.csv")
+    colunas = ["Gender", "Contract", "Churn Label",
+               "Tenure in Months", "Monthly Charge"]
+    df = pd.read_csv("data/telco_churn.csv", usecols=colunas)
     return df
 
 df = carregar_dados()
