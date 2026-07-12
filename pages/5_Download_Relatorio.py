@@ -13,7 +13,7 @@ from email import encoders
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
+import seaborn as sns
 
 # ============================================================
 # DADOS
@@ -366,33 +366,6 @@ elif pagina == "Envio por E-mail":
 
             except Exception as e:
                 st.error(f"Erro ao enviar o e-mail: {e}")                                                                                                                                                    
-
-if tipo_envio == "Grafico (imagem PNG)":
-
-    if grafico_escolhido == "Tempo de Contrato x Churn (Box Plot)":
-        anexo_bytes = imagem_boxplot()
-    elif grafico_escolhido == "Cobranca Mensal x Churn (Violin Plot)":
-        anexo_bytes = imagem_violin()
-    else:
-        anexo_bytes = imagem_barras()
-else:
-    anexo_bytes = RELATORIO_TEXTO.encode("utf-8")                        
-                    
-                enviar_email(
-                    remetente_email=remetente,
-                    remetente_senha=senha,
-                    destinatario=destinatario,
-                    assunto=assunto,
-                    corpo=corpo,
-                    anexo_bytes=anexo_bytes,
-                    nome_anexo=nome_arquivo
-                )
-
-                st.success("E-mail enviado com sucesso!")
-                st.balloons()
-
-            except Exception as e:
-                st.error(f"Erro ao enviar o e-mail: {e}")
 
 # ============================================================
 # PAGINA 4 — DOWNLOAD DO RELATORIO
