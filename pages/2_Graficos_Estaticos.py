@@ -1,9 +1,7 @@
 import streamlit as st
 import pandas as pd
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import seaborn as sns
+import plotly.express as px
+
 st.set_page_config(page_title="Graficos Estaticos", layout="wide")
 st.title("Graficos Estaticos")
 st.markdown("Visualizacoes gerais sobre o perfil dos clientes e o comportamento de churn.")
@@ -28,9 +26,7 @@ if churn_col:
 
     with col1:
      contagem_churn = df[churn_col].value_counts().reset_index()
-     contagem_churn.columns = ["Status", "Quantidade"]
-
-        import plotly.express as px     
+     contagem_churn.columns = ["Status", "Quantidade"]    
      fig_pizza = px.pie(
             contagem_churn,
             names="Status",
@@ -156,6 +152,6 @@ elif receita_col:
         title="Distribuição da Receita Mensal",
         color_discrete_sequence=["#f39c12"],
     )
-    st.plotly_chart(fig_receita, use_container_width=True)
+    st.plotly_chart(fig_receita2, use_container_width=True)
 else:
     st.info("Coluna de receita nao encontrada no dataset.")                    
