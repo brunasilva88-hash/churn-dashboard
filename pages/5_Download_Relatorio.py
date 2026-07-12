@@ -342,13 +342,30 @@ elif pagina == "Envio por E-mail":
         else:
             try:
                 if tipo_envio == "Grafico (imagem PNG)":
-                    # Gerar grafico escolhido
                     if grafico_escolhido == "Tempo de Contrato x Churn (Box Plot)":
-                        fig = gerar_grafico_boxplot()
+                        anexo_bytes = imagem_boxplot()
                     elif grafico_escolhido == "Cobranca Mensal x Churn (Violin Plot)":
-                        fig = gerar_grafico_violin()
+                        anexo_bytes = imagem_violin()
                     else:
-                        fig = gerar_grafico_heatmap()
+                        anexo_bytes = imagem_barras()
+                else:
+                    anexo_bytes = RELATORIO_TEXTO.encode("utf-8")
+
+                enviar_email(
+                    remetente_email=remetente,
+                    remetente_senha=senha,
+                    destinatario=destinatario,
+                    assunto=assunto,
+                    corpo=corpo,
+                    anexo_bytes=anexo_bytes,
+                    nome_anexo=nome_arquivo
+                )
+
+                st.success("E-mail enviado com sucesso!")
+                st.balloons()
+
+            except Exception as e:
+                st.error(f"Erro ao enviar o e-mail: {e}")                                                                                                                                                    
 
 if tipo_envio == "Grafico (imagem PNG)":
 
