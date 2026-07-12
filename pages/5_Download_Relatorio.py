@@ -10,11 +10,6 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 # ============================================================
 # DADOS
 # ============================================================
@@ -156,6 +151,7 @@ def gerar_grafico_heatmap():
 # ============================================================
 
 def _fig_para_bytes(fig):
+    import matplotlib.pyplot as plt    
     buf = io.BytesIO()
     fig.savefig(buf, format="png", dpi=100, bbox_inches="tight")
     plt.close(fig)            
@@ -163,6 +159,10 @@ def _fig_para_bytes(fig):
     return buf.getvalue()
 
 def imagem_boxplot():
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import seaborn as sns                
     df_plot = df[df["Churn Label"].isin(["Yes", "No"])]
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.boxplot(data=df_plot, x="Churn Label", y="Tenure in Months",
@@ -171,6 +171,10 @@ def imagem_boxplot():
     return _fig_para_bytes(fig)
 
 def imagem_violin():
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import seaborn as sns        
     df_plot = df[df["Churn Label"].isin(["Yes", "No"])]
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.violinplot(data=df_plot, x="Churn Label", y="Monthly Charge",
@@ -179,6 +183,10 @@ def imagem_violin():
     return _fig_para_bytes(fig)
 
 def imagem_barras():
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import seaborn as sns
     df_plot = df[df["Churn Label"].isin(["Yes", "No"])]
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.countplot(data=df_plot, x="Contract", hue="Churn Label",
