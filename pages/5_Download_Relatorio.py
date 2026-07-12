@@ -214,7 +214,7 @@ if pagina == "Tabela de Dados":
     st.title("Tabela de Dados")
     st.write("Visualize e filtre os dados brutos da base de clientes.")
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
         genero_filtro = st.multiselect(
@@ -230,16 +230,8 @@ if pagina == "Tabela de Dados":
             default=df["Contract"].unique().tolist(),
         )
 
-    with col3:
-        churn_filtro = st.multiselect(
-            "Filtrar por Contrato:",
-            options=df["Contract"].tolist(),
-            default=df["Contract"].tolist(),
-        )
-
     df_filtrado = df[
         (df["Gender"].isin(genero_filtro)) &
-        (df["Churn Label"].isin(churn_filtro)) &
         (df["Contract"].isin(contrato_filtro))
     ]
 
