@@ -10,6 +10,11 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+
 # ============================================================
 # DADOS
 # ============================================================
@@ -145,6 +150,41 @@ def gerar_grafico_heatmap():
         labels={"Contract": "Tipo de Contrato", "Churn Label": "Churn"},
     )
     return fig
+
+# ============================================================
+# FUNCOES DE IMAGEM (matplotlib — para envio por e-mail)
+# ============================================================
+
+def _fig_para_bytes(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=100, bbox_inches="tight")
+    plt.close(fig)            
+    buf.seek(0)
+    return buf.getvalue()
+
+def imagem_boxplot():
+    df_plot = df[df["Churn Label"].isin(["Yes", "No"])]
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.boxplot(data=df_plot, x="Churn Label", y="Tenure in Months",
+                palette={"Yes": "#EF553B", "No": "#00CC96"}, ax=ax)
+    ax.set_title("Distribuicao de Tempo de Contrato por Churn")
+    return _fig_para_bytes(fig)
+
+def imagem_violin():
+    df_plot = df[df["Churn Label"].isin(["Yes", "No"])]
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.violinplot(data=df_plot, x="Churn Label", y="Monthly Charge",
+                   palette={"Yes": "#EF553B", "No": "#00CC96"}, ax=ax)
+    ax.set_title("Cobranca Mensal por Status de Churn")
+    return _fig_para_bytes(fig)
+
+def imagem_barras():
+    df_plot = df[df["Churn Label"].isin(["Yes", "No"])]
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.countplot(data=df_plot, x="Contract", hue="Churn Label",
+                  palette={"Yes": "#EF553B", "No": "#00CC96"}, ax=ax)
+    ax.set_title("Tipo de Contrato x Churn")
+    return _fig_para_bytes(fig)                                                                                 
 
 # ============================================================
 # NAVEGACAO LATERAL
@@ -310,10 +350,16 @@ elif pagina == "Envio por E-mail":
                     else:
                         fig = gerar_grafico_heatmap()
 
-                    anexo_bytes = pio.to_image(fig, format="png", width=1000, height=600)
+if tipo_envio == "Grafico (imagem PNG)":
 
-                else:
-                    anexo_bytes = RELATORIO_TEXTO.encode("utf-8")
+    if grafico_escolhido == "Tempo de Contrato x Churn (Box Plot)":
+        anexo_bytes = imagem_boxplot()
+    elif grafico_escolhido == "Cobranca Mensal x Churn (Violin Plot)":
+        anexo_bytes = imagem_violin()
+    else:
+        anexo_bytes = imagem_barras()
+else:
+    anexo_bytes = RELATORIO_TEXTO.encode("utf-8")                        
                     
                 enviar_email(
                     remetente_email=remetente,
